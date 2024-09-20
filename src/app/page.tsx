@@ -1,10 +1,14 @@
+"use client"
 import Image from "next/image";
 import styles from "./page.module.css";
+import Navigation from "./navigation";
+import AddPost from "./post/page"
+import EditPost from "./edit/[id]/page"
 
 export default function Home() {
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
+      {/* <main className={styles.main}>
         <Image
           className={styles.logo}
           src="https://nextjs.org/icons/next.svg"
@@ -89,7 +93,10 @@ export default function Home() {
           />
           Go to nextjs.org →
         </a>
-      </footer>
+      </footer> */}
+      {/* <Navigation /> */}
+      <AddPost />
+      <EditPost />
     </div>
   );
 }
