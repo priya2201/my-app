@@ -1,5 +1,4 @@
 "use client"
-import { CheckBox } from '@mui/icons-material'
 import { FormControlLabel, InputLabel, TextField, Typography, Checkbox, Button, FormControl, Container } from '@mui/material'
 import React, { ChangeEvent,  useState } from 'react'
 export default function EditPost() {
@@ -40,7 +39,7 @@ export default function EditPost() {
 
                 <FormControl>
                     <InputLabel>Is Editable</InputLabel>
-                    <FormControlLabel control={<CheckBox
+                    <FormControlLabel control={<Checkbox
                         label="Product Editable"
                         checked={isEditable}
                         onChange={(e) => setIsEditable(e.target.checked)}

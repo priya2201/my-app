@@ -96,6 +96,9 @@ export default function Home() {
       </footer> */}
       {/* <Navigation /> */}
       <AddPost />
+
+
+      <br/>
       <EditPost />
     </div>
   );
