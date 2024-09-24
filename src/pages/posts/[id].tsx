@@ -1,68 +1,60 @@
-"use client";
-import {
-    FormControlLabel, InputLabel,
-    TextField, Typography, Checkbox, Button, FormControl, Container
-} from '@mui/material'
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import React, { ChangeEvent, useState } from 'react';
+import axios from 'axios';
 
-
-export default function EditPost() {
-    const [title, setTitle] = useState('')
-    const [content, setContent] = useState('')
-    const [isEditable, setIsEditable] = useState(true)
+const postDetail = () => {
+    const [post, setpost] = useState({ title: '', content: '' });
     const router = useRouter();
-
     const { id } = router.query;
 
-    const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        
-        const payload = {
-            title,
-            content,
-            isEditable
-        };
-        const response = await fetch(`http://localhost:8000/posts/:${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',  // Add this header
-            },
+    useEffect(() => {
+        if (id) {
+            const fetchpost = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:8000/posts/${id}`);
+                    setpost(response.data);
+                } catch (error) {
+                    console.error('Error fetching post:', error);
+                }
+            };
+            fetchpost();
+        }
+    }, [id]);
 
-            body: JSON.stringify(payload)
-        })
-        console.log(response)
-        console.log(await response.json());
+    const handleUpdate = async () => {
+        try {
+            await axios.put(`http://localhost:8000/posts/${id}`, post);
+            router.push('/posts'); // Redirect to post list after update
+        } catch (error) {
+            console.error('Error updating post:', error);
+        }
+    };
 
-    }
+    const handleDelete = async () => {
+        try {
+            await axios.delete(`http://localhost:8000/posts/${id}`);
+            router.push('/posts'); // Redirect to post list after delete
+        } catch (error) {
+            console.error('Error deleting post:', error);
+        }
+    };
+
     return (
         <div>
-            {isEditable ? (<Container component='form' onSubmit={handleSubmit}>
-                <Typography color='secondary' >Edit Post</Typography>
-                <TextField
-                    label='Title'
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                    margin='normal'
-                    variant='outlined' />
-                <TextField
-                    label='Content'
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    required
-                    margin='normal'
-                    variant='outlined' />
-
-
-                <FormControlLabel control={<Checkbox
-                    checked={isEditable}
-                    onChange={(e) => setIsEditable(e.target.checked)}
-                />}
-                    label='Product Editable' />
-                <Button color='secondary' variant='outlined' type='submit'>Edit Post</Button>
-            </Container>) : "You can't edit"}
-
+            <h1>Edit post</h1>
+            <input
+                type="text"
+                value={post.title}
+                onChange={(e) => setpost({ ...post, title: e.target.value })}
+            />
+            <textarea
+                value={post.content}
+                onChange={(e) => setpost({ ...post, content: e.target.value })}
+            />
+            <button onClick={handleUpdate}>Update</button>
+            <button onClick={handleDelete}>Delete</button>
         </div>
-    )
-}
+    );
+};
+
+export default postDetail;

@@ -1,8 +1,10 @@
 "use client";
-import { FormControlLabel, InputLabel, 
-TextField, Typography, Checkbox, Button, FormControl, Container } from '@mui/material'
+import {
+    FormControlLabel, InputLabel,
+    TextField, Typography, Checkbox, Button, FormControl, Container
+} from '@mui/material'
 import { useRouter } from 'next/router';
-import React, {  ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
 
 export default function EditPost() {
@@ -25,7 +27,7 @@ export default function EditPost() {
             headers: {
                 'Content-Type': 'application/json',  // Add this header
             },
-          
+
             body: JSON.stringify(payload)
         })
         console.log(response)
@@ -51,14 +53,14 @@ export default function EditPost() {
                     margin='normal'
                     variant='outlined' />
 
-              
+
                 <FormControlLabel control={<Checkbox
                     checked={isEditable}
                     onChange={(e) => setIsEditable(e.target.checked)}
                 />}
-                label='Product Editable' />
+                    label='PostEditable' />
                 <Button color='secondary' variant='outlined' type='submit'>Edit Post</Button>
-            </Container>):"You can't edit"}
+            </Container>) : "You can't edit"}
 
         </div>
     )
