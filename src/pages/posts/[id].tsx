@@ -1,22 +1,39 @@
-"use client"
-import { FormControlLabel, InputLabel, TextField, Typography, Checkbox, Button, FormControl, Container } from '@mui/material'
-import React, { ChangeEvent,  useState } from 'react'
+"use client";
+import {
+    FormControlLabel, InputLabel,
+    TextField, Typography, Checkbox, Button, FormControl, Container
+} from '@mui/material'
+import { useRouter } from 'next/router';
+import React, { ChangeEvent, useState } from 'react';
+
+
 export default function EditPost() {
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
     const [isEditable, setIsEditable] = useState(true)
+    const router = useRouter();
+
+    const { id } = router.query;
+
     const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault()
-        console.log(e.preventDefault())
-        const formData = new FormData()
-        formData.append('title', title)
-        formData.append('content', content)
-        formData.append('isEditable', isEditable.toString())
-        const response = await fetch(`http://localhost:8000/posts/${id}`, {
+        
+        const payload = {
+            title,
+            content,
+            isEditable
+        };
+        const response = await fetch(`http://localhost:8000/posts/:${id}`, {
             method: 'PUT',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json',  // Add this header
+            },
+
+            body: JSON.stringify(payload)
         })
         console.log(response)
+        console.log(await response.json());
+
     }
     return (
         <div>
@@ -37,16 +54,14 @@ export default function EditPost() {
                     margin='normal'
                     variant='outlined' />
 
-                <FormControl>
-                    <InputLabel>Is Editable</InputLabel>
-                    <FormControlLabel control={<Checkbox
-                        label="Product Editable"
-                        checked={isEditable}
-                        onChange={(e) => setIsEditable(e.target.checked)}
-                    />} />
-                </FormControl>
-                <Button color='secondary' type='submit'>Edit Post</Button>
-            </Container>):"You can't edit"}
+
+                <FormControlLabel control={<Checkbox
+                    checked={isEditable}
+                    onChange={(e) => setIsEditable(e.target.checked)}
+                />}
+                    label='Product Editable' />
+                <Button color='secondary' variant='outlined' type='submit'>Edit Post</Button>
+            </Container>) : "You can't edit"}
 
         </div>
     )

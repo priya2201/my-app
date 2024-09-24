@@ -7,10 +7,8 @@ function AddPost() {
     const [content, setContent] = useState('')
     const [isEditable, setIsEditable] = useState(true)
 
-    console.log(title, content, 'tc')
     const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
         e.preventDefault()
-        console.log(e.preventDefault())
         // formData.append('title', JSON.stringify(title))
         // formData.append('content', JSON.stringify(content))
         // formData.append('isEditable', isEditable.toString())
@@ -30,8 +28,7 @@ function AddPost() {
             body: JSON.stringify(payload)
             // body: formData
         })
-        console.log(response)
-        console.log(await response.json());
+        const data = await response.json()
 
     }
 
