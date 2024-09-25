@@ -5,6 +5,7 @@ import Navigation from "./navigation";
 import AddPost from "./components/AddPost"
 import EditPost from "./components/EditPost"
 import Link from "next/link";
+import { PostProvider } from "./contexts/PostContext";
 
 export default function Home() {
   return (
@@ -101,14 +102,16 @@ export default function Home() {
 
       <br/>
       <EditPost /> */}
-      <nav>
-        <ul>
-          <Link href="/posts/add">Posts</Link>
-        </ul>
-        <ul>
-          <Link href="/posts">All Posts</Link>
-        </ul>
-      </nav>
+      <PostProvider>
+        <nav>
+          <ul>
+            <Link href="/posts/add">Posts</Link>
+          </ul>
+          <ul>
+            <Link href="/posts">All Posts</Link>
+          </ul>
+        </nav>
+      </PostProvider>
     </div>
   );
 }

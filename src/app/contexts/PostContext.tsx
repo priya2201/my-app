@@ -1,28 +1,18 @@
-// // contexts/PostContext.tsx
 'use client'
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-import { createContext, useContext, useState } from "react";
+// Define context type
+interface PostContextType {
+  posts: any[];
+  setPosts: React.Dispatch<React.SetStateAction<any[]>>;
+}
 
-// import { createContext, useContext, useState, ReactNode } from 'react';
+// Create the PostContext
+const PostContext = createContext<PostContextType | undefined>(undefined);
 
-// // Create a context with default value as null
-const PostContext = createContext<any>(null);
-
-// export const PostProvider = ({ children }: { children: ReactNode }) => {
-//   const [posts, setPosts] = useState([]);
-
-//   return (
-//     <PostContext.Provider value={{ posts, setPosts }}>
-//       {children}
-//     </PostContext.Provider>
-//   );
-// };
-
-
-
-export const PostProvider = ({ children }: { children: React.ReactNode }) => {
-  const [posts, setPosts] = useState([]);  // Ensure this value is initialized correctly
-  console.log('Provider value:', { posts, setPosts });
+// Provider component
+export const PostProvider = ({ children }: { children: ReactNode }) => {
+  const [posts, setPosts] = useState<any[]>([]);
 
   return (
     <PostContext.Provider value={{ posts, setPosts }}>
@@ -31,6 +21,7 @@ export const PostProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+// Custom hook to use the PostContext
 export const usePostContext = () => {
   const context = useContext(PostContext);
   if (!context) {
