@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Image from "next/image";
 import styles from "./page.module.css";
 import Navigation from "./navigation";
@@ -6,6 +6,8 @@ import AddPost from "./components/AddPost"
 import EditPost from "./components/EditPost"
 import Link from "next/link";
 import { PostProvider } from "./contexts/PostContext";
+import PostList from "./components/Posts";
+// import PostList from "@/pages/posts";
 
 export default function Home() {
   return (
@@ -102,16 +104,16 @@ export default function Home() {
 
       <br/>
       <EditPost /> */}
-      <PostProvider>
-        <nav>
-          <ul>
-            <Link href="/posts/add">Posts</Link>
-          </ul>
-          <ul>
-            <Link href="/posts">All Posts</Link>
-          </ul>
-        </nav>
-      </PostProvider>
+      {/* <nav>
+        <ul>
+          <Link href="/posts/add">Posts</Link>
+        </ul>
+        <ul>
+          <Link href="/posts">All Posts</Link>
+        </ul>
+      </nav> */}
+      {/* <PostList/> */}
+      <PostList />
     </div>
   );
 }
