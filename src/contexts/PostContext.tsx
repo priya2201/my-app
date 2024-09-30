@@ -14,6 +14,7 @@ const PostContext = createContext<PostContextType | undefined>(undefined);
 export const PostProvider = ({ children }: { children: ReactNode }) => {
   const [posts, setPosts] = useState<any[]>([]);
   console.log("PostProvider initialized", posts);  // Debug log
+  console.log('PostProvider is wrapping the following children:', children);
 
   return (
     <PostContext.Provider value={{ posts, setPosts }}>
@@ -25,8 +26,8 @@ export const PostProvider = ({ children }: { children: ReactNode }) => {
 // Custom hook to use the PostContext
 export const usePostContext = () => {
   const context = useContext(PostContext);
-  // if (!context) {
-  //   throw new Error('usePostContext must be used within a PostProvider');
-  // }
+  if (!context) {
+    throw new Error('usePostContext must be used within a PostProvider');
+  }
   return context;
 };

@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
@@ -5,13 +6,13 @@ import axios from 'axios';
 const postDetail = () => {
     const [post, setpost] = useState({ title: '', content: '' });
     const router = useRouter();
-    const { id } = router.query;
+    const query = router.query;
 
     useEffect(() => {
-        if (id) {
+        if (query.id) {
             const fetchpost = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:8000/posts/${id}`);
+                    const response = await axios.get(`http://localhost:8000/posts/${query.id}`);
                     setpost(response.data);
                 } catch (error) {
                     console.error('Error fetching post:', error);
@@ -19,7 +20,7 @@ const postDetail = () => {
             };
             fetchpost();
         }
-    }, [id]);
+    }, [query.id]);
 
     const handleUpdate = async () => {
         try {

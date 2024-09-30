@@ -65,7 +65,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import ThemeRegistry from './components/ThemeRegistry'
-import { PostProvider } from './contexts/PostContext'
+import { PostProvider } from '../contexts/PostContext'
 
 export const metadata: Metadata = {
   title: 'Next App MUI',
@@ -81,7 +81,7 @@ export default function RootLayout({
     <html lang="en">
       <ThemeRegistry>
         <PostProvider>
-          <body>{children}</body>
+        <body>{children}</body>
         </PostProvider>
       </ThemeRegistry>
 

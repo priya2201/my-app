@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { Container, Grid, Card, CardContent, Typography, IconButton, Pagination, Button } from '@mui/material';
+import { Container, Grid, Card, CardContent, Typography, IconButton, Pagination, Button, Dialog, DialogTitle, DialogContent, TextField, FormControlLabel, Checkbox, DialogActions, } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { usePostContext } from "../../app/contexts/PostContext"
+import { usePostContext } from "../../contexts/PostContext"
 const PostList = () => {
     const { posts, setPosts } = usePostContext();
     //   const [posts,setPosts]=useState([])
@@ -12,19 +12,24 @@ const PostList = () => {
     const [limit, setLimit] = useState(6);  // Number of posts per page
     const [totalPages, setTotalPages] = useState(1); // Dynamically calculated total pages
     const isMobile = useMediaQuery('(max-width:600px)');  // For mobile responsiveness
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [isEditable, setIsEditable] = useState(true);
+    const [open, setOpen] = useState(false);
+    const [selectedPost, setSelectedPost] = useState(null); // Track selected post for modal
 
     // Fetch posts based on page and limit
     const fetchPosts = async (page: number) => {
         try {
-              const response = await fetch(`http://localhost:8000/posts?page=${page}&limit=${limit}`);
+            const response = await fetch(`http://localhost:8000/posts?page=${page}&limit=${limit}`);
             // const response = await fetch('https://jsonplaceholder.typicode.com/posts')
             const data = await response.json();
 
-              setPosts(data.postsData);
-              console.log(data.postsData)
+            setPosts(data.postsData);
+            console.log(data.postsData)
             // setPosts(data)
             // console.log(data)
-              setTotalPages(Math.ceil(data.totalPosts / limit));  // Dynamically calculate total pages
+            setTotalPages(Math.ceil(data.totalPosts / limit));  // Dynamically calculate total pages
         } catch (error) {
             console.error('Error fetching posts:', error);
         }
@@ -37,13 +42,111 @@ const PostList = () => {
     const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
     };
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const payload = {
+            title,
+            content,
+            isEditable
+        };
+
+        try {
+            const response = await fetch('http://localhost:8000/posts/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const newPost = await response.json();
+
+            // Update the posts list with the new post
+            setPosts((prevPosts) => [...prevPosts, newPost]);
+
+            // Reset form and close modal
+            setTitle('');
+            setContent('');
+            setIsEditable(true);
+            setOpen(false);
+        } catch (error) {
+            console.error('Error adding post:', error);
+        }
+    };
+
+    // Handle modal open/close
+    const handleClickOpen = (post: any) => {
+        if (post) {
+            setSelectedPost(post);
+            setTitle(post.title);
+            setContent(post.content);
+            setIsEditable(post.isEditable);
+        }
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedPost(null); // Reset selected post
+        setTitle('');
+        setContent('');
+        setIsEditable(true);
+    };
 
     return (
         <Container>
-            <Button variant="contained" color="primary" style={{ marginBottom: '1rem' }}>
+            {/* <Button variant="contained" color="primary" style={{ marginBottom: '1rem' }}>
                 All Posts
+            </Button> */}
+            <Button color='primary' variant='contained' onClick={handleClickOpen} style={{ marginBottom: '20px' }}>
+                Create Post
             </Button>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>{selectedPost ? 'Edit Post' : 'Create a New Post'}</DialogTitle>
+                <DialogContent>
+                    <Container component='form' onSubmit={handleSubmit}>
 
+                        <TextField
+                            label='Title'
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            required
+                            margin='normal'
+                            variant='outlined'
+                            fullWidth
+                        />
+                        <TextField
+                            label='Content'
+                            rows={4}
+                            multiline
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            required
+                            margin='normal'
+                            variant='outlined'
+                            fullWidth
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={isEditable}
+                                    onChange={(e) => setIsEditable(e.target.checked)}
+                                    color='secondary'
+                                />
+                            }
+                            label="Post Editable"
+                        />
+                        <Button color='secondary' variant='outlined' type='submit'>
+                            {selectedPost ? 'Update Post' : 'Create Post'}
+                        </Button>
+                    </Container>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Cancel
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <Grid container spacing={isMobile ? 2 : 3}>
                 {posts.map((post: any) => (
                     <Grid item xs={12} sm={6} md={4} key={post.id}>
@@ -51,7 +154,9 @@ const PostList = () => {
                             <CardContent>
                                 <Typography variant="h5" gutterBottom>{post.title}</Typography>
                                 <Typography variant="body2" color="textSecondary">
-                                    {post.content.substring(0, 150)}...  {/* Truncate content for brevity */}
+                                    {post.content
+                                        // .substring(0, 150)
+                                    }...  {/* Truncate content for brevity */}
                                 </Typography>
                             </CardContent>
 
