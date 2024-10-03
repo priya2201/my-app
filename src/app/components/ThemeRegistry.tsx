@@ -55,7 +55,8 @@ export default function ThemeRegistry({children}:{children:React.ReactNode}) {
 
   return (
     <CacheProvider value={cache}>
-          <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        
               <CssBaseline/>{children}</ThemeProvider>
     </CacheProvider>
   );

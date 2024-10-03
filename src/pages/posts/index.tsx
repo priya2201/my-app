@@ -186,7 +186,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { usePostContext } from "../contexts/PostContext"
+import { usePostContext } from "../../contexts/PostContext"
 
 const PostList = () => {
   const { posts, setPosts } = usePostContext();

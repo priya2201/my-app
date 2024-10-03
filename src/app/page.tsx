@@ -104,7 +104,7 @@ export default function Home() {
 
       <br/>
       <EditPost /> */}
-      <nav>
+      {/* <nav>
         <ul>
           <Link href="/posts/add">Posts</Link>
         </ul>
@@ -115,8 +115,8 @@ export default function Home() {
           <Link href="/posts/me">meee</Link>
         </ul>
 
-      </nav>
-      {/* <PostList/> */}
+      </nav> */}
+      <PostList />
       {/* <PostList /> */}
     </div>
   );
